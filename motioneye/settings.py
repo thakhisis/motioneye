@@ -135,3 +135,21 @@ HTTP_BASIC_AUTH = False
 
 # provides the possibility to override the hostname
 SERVER_NAME = socket.gethostname()
+
+# enables MQTT client
+MQTT = True
+
+# MQTT Server
+MQTT_SERVER = 'localhost'
+
+# MQTT Port
+MQTT_PORT = 1883
+
+# MQTT username
+MQTT_USERNAME = ''
+
+# MQTT password
+MQTT_PASSWORD = ''
+
+# MQTT motion detection topic
+MQTT_MOTION_DETECTION_TOPIC = '/motioneye/detection'

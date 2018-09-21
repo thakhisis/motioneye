@@ -257,6 +257,14 @@ def test_requirements():
     except ImportError:
         logging.fatal('please install pycurl')
         sys.exit(-1)
+
+    try:
+        if settings.MQTT:
+            import paho.mqtt.client as mqtt  # @UnusedImport
+
+    except ImportError:
+        logging.fatal('please install paho mqtt client')
+        sys.exit(-1)
     
     import motionctl
     has_motion = motionctl.find_motion()[0] is not None
@@ -387,6 +395,12 @@ def run():
         smbctl.start()
         logging.info('smb mounts started')
 
+    mqttClient = None
+    if settings.MQTT:
+        import mqttctl
+        mqttClient = mqttctl.start()
+        logging.info('mqtt service started')
+
     template.add_context('static_path', 'static/')
     
     application = Application(handler_mapping, debug=False, log_function=_log_request,
@@ -414,6 +428,13 @@ def run():
     if settings.SMB_SHARES:
         smbctl.stop()
         logging.info('smb mounts stopped')
+
+    if settings.MQTT:
+        if (mqttClient is None):
+            logging.error('mqtt client is None')
+        else:
+            mqttctl.stop(mqttClient)
+            logging.info('mqtt service stopped')
 
     logging.info('bye!')
 
